@@ -1,12 +1,45 @@
-# React + Vite
+Dishcovery 🍲
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Dishcovery is a recipe discovery web application built with React (Vite) and TailwindCSS. It allows users to search recipes by name or ingredient, powered by TheMealDB API. (https://www.themealdb.com/)
 
-Currently, two official plugins are available:
+The goal is to make cooking fun, accessible, and inclusive by highlighting both international and Nigerian dishes.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+⸻
 
-## Expanding the ESLint configuration
+🚀 Features
+ • 🔍 Search by Name or Ingredient
+ • 🥘 Browse global recipes from TheMealDB
+ • 🇳🇬 Nigerian Dish Highlights (coming soon)
+ • 📖 Detailed recipe instructions with ingredients (coming soon)
+ • 📱 Fully responsive UI with TailwindCSS (coming soon)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+⸻
+
+📂 Project Setup
+
+Clone the repository and install dependencies:
+📂 Project Setup
+
+Clone the repository and install dependencies:
+git clone https://github.com/omaonyejiakor93/dishcovery.git
+cd dishcovery
+npm install
+Run the project locally:
+npm run dev
+🖼️ Current Progress (Part 3)
+ • Project initialized with Vite + React + TailwindCSS
+ • Search component working with API integration
+ • Displays message when no recipe is found
+
+ 🔮 Roadmap (Next Steps)
+ • Add Recipe Detail Page with ingredients, instructions, and images
+ • Style interface to match high-fidelity design
+ • Add Categories browsing feature
+ • Highlight Nigerian recipes
+ • Deploy to Netlify or Vercel
+
+⸻
+
+📜 License
+
+This project is for educational purposes (ALX Frontend Capstone).
