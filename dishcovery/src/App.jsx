@@ -1,30 +1,37 @@
-import { Routes, Route } from "react-router-dom"
-import Navbar from "./components/Navbar"
-import Home from "./pages/Home"
-import RecipeDetail from "./pages/RecipeDetail"
-import Favorites from "./pages/Favorites"
-import Search from "./pages/Search"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import NavBar from "./components/NavBar";
+import Footer from "./components/Footer";
+
+// Placeholder pages
+import Home from "./pages/Home";
+import RecipeDetail from "./pages/RecipeDetail";
+// We will add these later
+// import Favorites from "./pages/Favorites";
+// import Search from "./pages/Search";
 
 function App() {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
+    <Router>
+      <div className="flex flex-col min-h-screen">
+        {/* Navbar always at top */}
+        <NavBar />
 
-      {/* Temporary Preview Section */}
-      <div className="text-center py-10 text-gray-700">
-        <h1 className="text-3xl font-bold">Welcome to Dishcovery 🍲</h1>
-        <p className="mt-3 text-lg">Your Navbar is working! 🚀</p>
+        {/* Main Content */}
+        <main className="flex-grow container mx-auto px-4 py-6">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/recipe/:id" element={<RecipeDetail />} />
+            {/* Uncomment later when we create these pages */}
+            {/* <Route path="/favorites" element={<Favorites />} /> */}
+            {/* <Route path="/search" element={<Search />} /> */}
+          </Routes>
+        </main>
+
+        {/* Footer always at bottom */}
+        <Footer />
       </div>
-
-      {/* Routes */}
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/favorites" element={<Favorites />} />
-        <Route path="/recipe/:id" element={<RecipeDetail />} />
-      </Routes>
-    </div>
-  )
+    </Router>
+  );
 }
 
-export default App
+export default App;
