@@ -1,67 +1,78 @@
 // src/pages/Search.jsx
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
-function Search() {
+export default function Search() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleSearch = (e) => {
+  async function handleSearch(e) {
     e.preventDefault();
-    // Placeholder logic – later we’ll connect it to the API
-    if (query.trim() === "") {
-      setResults([]);
-      return;
+    if (!query.trim()) return;
+
+    setLoading(true);
+    try {
+      // ...existing code...
+      const res = await fetch(
+        `https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`
+      );
+// ...existing code...
+      const data = await res.json();
+      setResults(data.meals || []);
+    } catch (err) {
+      console.error("Search error:", err);
+    } finally {
+      setLoading(false);
     }
-    setResults([
-      { id: 1, title: "Spaghetti Bolognese", image: "https://via.placeholder.com/150" },
-      { id: 2, title: "Chicken Curry", image: "https://via.placeholder.com/150" },
-    ]);
-  };
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-6">
-      <h1 className="text-3xl font-bold text-center mb-8">Search Recipes</h1>
+    <div className="min-h-screen py-12 px-6 max-w-5xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6 text-center">Search Recipes</h1>
 
       {/* Search Form */}
-      <form onSubmit={handleSearch} className="flex justify-center mb-10">
+      <form onSubmit={handleSearch} className="flex justify-center mb-8">
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search for recipes..."
-          className="w-1/2 px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          placeholder="Search for a meal..."
+          className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-l focus:outline-none focus:ring focus:ring-green-400"
         />
         <button
           type="submit"
-          className="bg-green-600 text-white px-6 py-2 rounded-r-md hover:bg-green-700"
+          className="bg-green-600 text-white px-6 py-2 rounded-r hover:bg-green-700"
         >
           Search
         </button>
       </form>
 
-      {/* Search Results */}
-      {results.length === 0 ? (
-        <p className="text-center text-gray-500">No recipes found. Try another search.</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {results.map((recipe) => (
-            <div
-              key={recipe.id}
-              className="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden"
-            >
-              <img src={recipe.image} alt={recipe.title} className="w-full h-40 object-cover" />
-              <div className="p-4">
-                <h3 className="text-lg font-semibold">{recipe.title}</h3>
-                <button className="mt-3 w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
-                  View Details
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* Results */}
+      {loading && <p className="text-center">Loading...</p>}
+      {!loading && results.length === 0 && query && (
+        <p className="text-center text-gray-500">No meals found.</p>
       )}
+
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+        {results.map((meal) => (
+          <Link
+            key={meal.idMeal}
+            to={`/recipe/${meal.idMeal}`}
+            className="block bg-white rounded shadow hover:shadow-lg overflow-hidden transition"
+          >
+            <img
+              src={meal.strMealThumb}
+              alt={meal.strMeal}
+              className="w-full h-48 object-cover"
+            />
+            <div className="p-4">
+              <h2 className="font-semibold text-lg">{meal.strMeal}</h2>
+              <p className="text-sm text-gray-600">{meal.strCategory}</p>
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
-
-export default Search;
