@@ -1,67 +1,76 @@
 // src/pages/RecipeDetail.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-function RecipeDetail() {
+export default function RecipeDetail() {
   const { id } = useParams();
+  const [meal, setMeal] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Placeholder data – later we’ll connect this to an API
-  const recipe = {
-    id,
-    title: "Spaghetti Bolognese",
-    image: "https://via.placeholder.com/600x400",
-    ingredients: [
-      "200g Spaghetti",
-      "100g Ground Beef",
-      "1 Onion",
-      "2 Garlic Cloves",
-      "400g Tomatoes",
-      "Salt & Pepper to taste",
-    ],
-    instructions: [
-      "Boil pasta until al dente.",
-      "Cook beef with onion and garlic.",
-      "Add tomatoes and simmer.",
-      "Mix pasta with sauce and serve hot.",
-    ],
-  };
+  useEffect(() => {
+    async function fetchMeal() {
+      try {
+        const res = await fetch(
+          https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}
+        );
+        const data = await res.json();
+        if (data.meals && data.meals.length > 0) {
+          setMeal(data.meals[0]);
+        }
+      } catch (err) {
+        console.error("Error fetching meal:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchMeal();
+  }, [id]);
+
+  function addToFavorites() {
+    if (!meal) return;
+    const raw = localStorage.getItem("dishcovery_favorites");
+    const arr = raw ? JSON.parse(raw) : [];
+    const exists = arr.find((x) => x.idMeal === meal.idMeal);
+    if (!exists) {
+      arr.unshift({
+        idMeal: meal.idMeal,
+        strMeal: meal.strMeal,
+        strMealThumb: meal.strMealThumb,
+        strCategory: meal.strCategory,
+      });
+      localStorage.setItem("dishcovery_favorites", JSON.stringify(arr));
+    }
+    alert("Recipe added to favorites!");
+  }
+
+  if (loading) return <p className="p-6">Loading...</p>;
+  if (!meal) return <p className="p-6">Recipe not found.</p>;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-6">
-      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-        <img
-          src={recipe.image}
-          alt={recipe.title}
-          className="w-full h-64 object-cover"
-        />
+    <div className="min-h-screen py-12 px-6 max-w-3xl mx-auto">
+      <h1 className="text-3xl font-bold mb-4">{meal.strMeal}</h1>
+      <img
+        src={meal.strMealThumb}
+        alt={meal.strMeal}
+        className="w-full h-80 object-cover rounded mb-6"
+      />
 
-        <div className="p-6">
-          <h1 className="text-3xl font-bold mb-4">{recipe.title}</h1>
+      <p className="text-gray-700 mb-4">
+        <strong>Category:</strong> {meal.strCategory}
+      </p>
+      <p className="text-gray-700 mb-4">
+        <strong>Area:</strong> {meal.strArea}
+      </p>
 
-          {/* Ingredients */}
-          <h2 className="text-xl font-semibold mb-2">Ingredients</h2>
-          <ul className="list-disc list-inside mb-6 text-gray-700">
-            {recipe.ingredients.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
+      <h2 className="text-xl font-semibold mb-2">Instructions</h2>
+      <p className="text-gray-700 whitespace-pre-line">{meal.strInstructions}</p>
 
-          {/* Instructions */}
-          <h2 className="text-xl font-semibold mb-2">Instructions</h2>
-          <ol className="list-decimal list-inside space-y-2 text-gray-700">
-            {recipe.instructions.map((step, index) => (
-              <li key={index}>{step}</li>
-            ))}
-          </ol>
-
-          {/* Favorite Button */}
-          <button className="mt-6 w-full bg-green-600 text-white py-3 rounded hover:bg-green-700">
-            Add to Favorites
-          </button>
-        </div>
-      </div>
+      <button
+        onClick={addToFavorites}
+        className="mt-6 w-full bg-green-600 text-white py-3 rounded hover:bg-green-700"
+      >
+        Add to Favorites
+      </button>
     </div>
   );
 }
-
-export default RecipeDetail;

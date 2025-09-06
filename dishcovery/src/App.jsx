@@ -1,37 +1,26 @@
+// src/App.jsx
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import NavBar from "./components/NavBar";
-import Footer from "./components/Footer";
-
-// Placeholder pages
+import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
+import Search from "./pages/Search";
 import RecipeDetail from "./pages/RecipeDetail";
-// We will add these later
-// import Favorites from "./pages/Favorites";
-// import Search from "./pages/Search";
+import Favorites from "./pages/Favorites";
 
-function App() {
+export default function App() {
   return (
     <Router>
-      <div className="flex flex-col min-h-screen">
-        {/* Navbar always at top */}
-        <NavBar />
-
-        {/* Main Content */}
-        <main className="flex-grow container mx-auto px-4 py-6">
+      <div className="min-h-screen flex flex-col bg-gray-100">
+        <Navbar />
+        <main className="flex-1">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/search" element={<Search />} />
             <Route path="/recipe/:id" element={<RecipeDetail />} />
-            {/* Uncomment later when we create these pages */}
-            {/* <Route path="/favorites" element={<Favorites />} /> */}
-            {/* <Route path="/search" element={<Search />} /> */}
+            <Route path="/favorites" element={<Favorites />} />
           </Routes>
         </main>
-
-        {/* Footer always at bottom */}
-        <Footer />
       </div>
     </Router>
   );
 }
-
-export default App;
