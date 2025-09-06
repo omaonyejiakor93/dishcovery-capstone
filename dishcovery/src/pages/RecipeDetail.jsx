@@ -1,59 +1,67 @@
-import React, { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import { lookupMeal } from '../api/meals'
+// src/pages/RecipeDetail.jsx
+import React from "react";
+import { useParams } from "react-router-dom";
 
-function getIngredients(meal) {
-  const list = []
-  for (let i = 1; i <= 20; i++) {
-    const ing = meal[`strIngredient${i}`]
-    const measure = meal[`strMeasure${i}`]
-    if (ing && ing.trim()) list.push(`${measure ? measure + ' ' : ''}${ing}`)
-  }
-  return list
-}
+function RecipeDetail() {
+  const { id } = useParams();
 
-export default function RecipeDetail() {
-  const { id } = useParams()
-  const [meal, setMeal] = useState(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    let mounted = true
-    async function load() {
-      setLoading(true)
-      const result = await lookupMeal(id)
-      if (mounted) setMeal(result)
-      setLoading(false)
-    }
-    load()
-    return () => (mounted = false)
-  }, [id])
-
-  if (loading) return <p className="p-4">Loading...</p>
-  if (!meal) return <p className="p-4">Recipe not found.</p>
-
-  const ingredients = getIngredients(meal)
+  // Placeholder data – later we’ll connect this to an API
+  const recipe = {
+    id,
+    title: "Spaghetti Bolognese",
+    image: "https://via.placeholder.com/600x400",
+    ingredients: [
+      "200g Spaghetti",
+      "100g Ground Beef",
+      "1 Onion",
+      "2 Garlic Cloves",
+      "400g Tomatoes",
+      "Salt & Pepper to taste",
+    ],
+    instructions: [
+      "Boil pasta until al dente.",
+      "Cook beef with onion and garlic.",
+      "Add tomatoes and simmer.",
+      "Mix pasta with sauce and serve hot.",
+    ],
+  };
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <Link to="/" className="text-blue-600">← Back</Link>
-      <h1 className="text-3xl font-bold my-4">{meal.strMeal}</h1>
+    <div className="min-h-screen bg-gray-50 py-12 px-6">
+      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+        <img
+          src={recipe.image}
+          alt={recipe.title}
+          className="w-full h-64 object-cover"
+        />
 
-      <div className="grid md:grid-cols-2 gap-6">
-        <img src={meal.strMealThumb} alt={meal.strMeal} className="w-full rounded" />
-        <div>
-          <h3 className="font-semibold mb-2">Ingredients</h3>
-          <ul className="list-disc ml-5 mb-4">
-            {ingredients.map((i, idx) => <li key={idx}>{i}</li>)}
+        <div className="p-6">
+          <h1 className="text-3xl font-bold mb-4">{recipe.title}</h1>
+
+          {/* Ingredients */}
+          <h2 className="text-xl font-semibold mb-2">Ingredients</h2>
+          <ul className="list-disc list-inside mb-6 text-gray-700">
+            {recipe.ingredients.map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
           </ul>
-          <p><strong>Category:</strong> {meal.strCategory} • <strong>Area:</strong> {meal.strArea}</p>
+
+          {/* Instructions */}
+          <h2 className="text-xl font-semibold mb-2">Instructions</h2>
+          <ol className="list-decimal list-inside space-y-2 text-gray-700">
+            {recipe.instructions.map((step, index) => (
+              <li key={index}>{step}</li>
+            ))}
+          </ol>
+
+          {/* Favorite Button */}
+          <button className="mt-6 w-full bg-green-600 text-white py-3 rounded hover:bg-green-700">
+            Add to Favorites
+          </button>
         </div>
       </div>
-
-      <div className="mt-6">
-        <h3 className="font-semibold mb-2">Instructions</h3>
-        <p className="whitespace-pre-line">{meal.strInstructions}</p>
-      </div>
     </div>
-  )
+  );
 }
+
+export default RecipeDetail;
