@@ -10,9 +10,11 @@ export default function RecipeDetail() {
   useEffect(() => {
     async function fetchMeal() {
       try {
+        // ...existing code...
         const res = await fetch(
-          https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}
+          `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
         );
+// ...existing code...
         const data = await res.json();
         if (data.meals && data.meals.length > 0) {
           setMeal(data.meals[0]);

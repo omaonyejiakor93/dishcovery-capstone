@@ -1,4 +1,6 @@
 // src/components/Footer.js
+import { Link } from "react-router-dom";
+
 export default function Footer() {
   return (
     <footer className="bg-green-700 text-white py-6 mt-8">
@@ -6,7 +8,13 @@ export default function Footer() {
         
         {/* Copyright */}
         <p className="text-sm">
-          © {new Date().getFullYear()} Dishcovery. All rights reserved.
+          © {new Date().getFullYear()} Dishcovery. All rights reserved. ·{" "}
+          <Link
+            to="/copyright"
+            className="hover:text-yellow-300 transition-colors"
+          >
+            Copyright
+          </Link>
         </p>
 
         {/* Social Links */}
