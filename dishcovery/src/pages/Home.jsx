@@ -1,64 +1,78 @@
+// src/pages/Home.jsx
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 export default function Home() {
+  const [recipes, setRecipes] = useState([]);
+
+  useEffect(() => {
+    // Fetch recipes starting with "c" just for demo
+    fetch("https://www.themealdb.com/api/json/v1/1/search.php?f=c")
+      .then((res) => res.json())
+      .then((data) => {
+        setRecipes(data.meals || []);
+      })
+      .catch((err) => console.error("Error fetching recipes:", err));
+  }, []);
+
   return (
-    <div className="space-y-12">
+    <div className="bg-gray-50 min-h-screen">
       {/* Hero Section */}
-      <section className="text-center py-16 bg-gradient-to-r from-green-400 via-yellow-300 to-red-400 rounded-lg shadow-lg">
-        <h1 className="text-5xl font-extrabold text-white mb-4">
-          Discover Delicious Recipes 🍲
+      <section className="bg-gradient-to-r from-green-500 to-green-700 text-white py-20 px-6 text-center">
+        <h1 className="text-4xl md:text-6xl font-extrabold mb-4">
+          Discover Delicious Recipes
         </h1>
-        <p className="text-lg text-white mb-6 max-w-2xl mx-auto">
-          Find recipes tailored to your taste, save your favorites, and make cooking fun again.
+        <p className="text-lg md:text-xl mb-6 max-w-2xl mx-auto">
+          Find the best recipes for every occasion, save your favorites, and
+          explore step-by-step cooking guides.
         </p>
-        <a
-          href="/search"
-          className="px-6 py-3 bg-white text-green-600 font-semibold rounded-md shadow hover:bg-gray-200 transition"
+        <Link
+          to="/search"
+          className="inline-block bg-white text-green-700 font-semibold px-6 py-3 rounded-lg shadow hover:bg-gray-100 transition"
         >
-          Search Recipes
-        </a>
+          Start Exploring
+        </Link>
       </section>
 
-      {/* Featured Recipes Section */}
-      <section>
-        <h2 className="text-3xl font-bold text-gray-800 mb-6">Featured Recipes</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {/* Card 1 */}
-          <div className="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden">
-            <img
-              src="https://source.unsplash.com/400x300/?pasta"
-              alt="Recipe 1"
-              className="w-full h-48 object-cover"
-            />
-            <div className="p-4">
-              <h3 className="text-xl font-semibold mb-2">Creamy Pasta</h3>
-              <p className="text-gray-600">A quick and tasty Italian classic.</p>
-            </div>
-          </div>
+      {/* Featured Recipes */}
+      <section className="py-16 px-6 max-w-6xl mx-auto">
+        <h2 className="text-2xl font-bold text-gray-800 mb-8 text-center">
+          Featured Recipes
+        </h2>
 
-          {/* Card 2 */}
-          <div className="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden">
-            <img
-              src="https://source.unsplash.com/400x300/?salad"
-              alt="Recipe 2"
-              className="w-full h-48 object-cover"
-            />
-            <div className="p-4">
-              <h3 className="text-xl font-semibold mb-2">Fresh Salad</h3>
-              <p className="text-gray-600">Healthy and refreshing greens.</p>
-            </div>
-          </div>
-
-          {/* Card 3 */}
-          <div className="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden">
-            <img
-              src="https://source.unsplash.com/400x300/?soup"
-              alt="Recipe 3"
-              className="w-full h-48 object-cover"
-            />
-            <div className="p-4">
-              <h3 className="text-xl font-semibold mb-2">Hearty Soup</h3>
-              <p className="text-gray-600">Warm and comforting for any day.</p>
-            </div>
-          </div>
+        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+          {recipes.length > 0 ? (
+            recipes.map((meal) => (
+              <div
+                key={meal.idMeal}
+                className="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden"
+              >
+                <img
+                  src={meal.strMealThumb}
+                  alt={meal.strMeal}
+                  className="recipe-img"
+                />
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    {meal.strMeal}
+                  </h3>
+                  <p className="text-gray-600 text-sm mt-1">
+                    {meal.strCategory} • {meal.strArea}
+                  </p>
+                  <Link
+                    to={`/recipe/${meal.idMeal}`}
+                    className="mt-3 inline-block text-green-600 font-medium hover:underline"
+                  >
+                    View Recipe →
+                  </Link>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-center text-gray-500 col-span-full">
+              Loading recipes...
+            </p>
+          )}
         </div>
       </section>
     </div>

@@ -4,73 +4,77 @@ import { Link } from "react-router-dom";
 
 export default function Search() {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
+  const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
 
   async function handleSearch(e) {
     e.preventDefault();
-    if (!query.trim()) return;
+    if (!query) return;
 
     setLoading(true);
     try {
-      // ...existing code...
       const res = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`
-      );
-// ...existing code...
+  `https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`
+);
       const data = await res.json();
-      setResults(data.meals || []);
+      setRecipes(data.meals || []);
     } catch (err) {
-      console.error("Search error:", err);
+      console.error("Error searching recipes:", err);
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div className="min-h-screen py-12 px-6 max-w-5xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center">Search Recipes</h1>
+    <div className="max-w-6xl mx-auto px-6 py-12">
+      <h1 className="text-3xl font-bold mb-6">Search Recipes</h1>
 
-      {/* Search Form */}
-      <form onSubmit={handleSearch} className="flex justify-center mb-8">
+      {/* Search form */}
+      <form onSubmit={handleSearch} className="mb-8 flex gap-3">
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search for a meal..."
-          className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-l focus:outline-none focus:ring focus:ring-green-400"
+          placeholder="Search for a recipe..."
+          className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
         />
         <button
           type="submit"
-          className="bg-green-600 text-white px-6 py-2 rounded-r hover:bg-green-700"
+          className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
         >
           Search
         </button>
       </form>
 
       {/* Results */}
-      {loading && <p className="text-center">Loading...</p>}
-      {!loading && results.length === 0 && query && (
-        <p className="text-center text-gray-500">No meals found.</p>
+      {loading && <p>Searching recipes...</p>}
+      {!loading && recipes.length === 0 && query && (
+        <p className="text-gray-500">No results found for "{query}".</p>
       )}
-
-      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-        {results.map((meal) => (
-          <Link
-            key={meal.idMeal}
-            to={`/recipe/${meal.idMeal}`}
-            className="block bg-white rounded shadow hover:shadow-lg overflow-hidden transition"
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {recipes.map((recipe) => (
+          <div
+            key={recipe.idMeal}
+            className="bg-white rounded-lg shadow hover:shadow-lg overflow-hidden"
           >
             <img
-              src={meal.strMealThumb}
-              alt={meal.strMeal}
+              src={recipe.strMealThumb}
+              alt={recipe.strMeal}
               className="w-full h-48 object-cover"
             />
             <div className="p-4">
-              <h2 className="font-semibold text-lg">{meal.strMeal}</h2>
-              <p className="text-sm text-gray-600">{meal.strCategory}</p>
+              <h3 className="text-lg font-semibold">{recipe.strMeal}</h3>
+              <p className="text-sm text-gray-500">
+                {recipe.strArea} • {recipe.strCategory}
+              </p>
+              <Link
+                to={`/recipe/${recipe.idMeal}`}
+                className="mt-3 inline-block px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+              >
+                View Recipe
+              </Link>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
     </div>

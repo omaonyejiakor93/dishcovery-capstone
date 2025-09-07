@@ -1,38 +1,43 @@
-// src/components/Navbar.jsx
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 export default function Navbar() {
   return (
-    <nav className="bg-green-700 text-white px-6 py-4 shadow-md">
-      <div className="container mx-auto flex justify-between items-center">
-        {/* Logo / Brand */}
-        <Link to="/" className="text-2xl font-bold tracking-wide">
+    <header className="bg-white shadow">
+      <div className="container mx-auto px-4 flex justify-between items-center py-4">
+        {/* Logo */}
+        <Link to="/" className="text-2xl font-bold text-green-700">
           Dishcovery
         </Link>
 
-        {/* Links */}
-        <div className="flex gap-6">
-          <Link
+        {/* Navigation Links */}
+        <nav className="flex space-x-6">
+          <NavLink
             to="/"
-            className="hover:text-yellow-300 transition-colors duration-200"
+            className={({ isActive }) =>
+              isActive ? "text-green-700 font-semibold" : "text-gray-700 hover:text-green-700"
+            }
           >
             Home
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to="/search"
-            className="hover:text-yellow-300 transition-colors duration-200"
+            className={({ isActive }) =>
+              isActive ? "text-green-700 font-semibold" : "text-gray-700 hover:text-green-700"
+            }
           >
             Search
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to="/favorites"
-            className="hover:text-yellow-300 transition-colors duration-200"
+            className={({ isActive }) =>
+              isActive ? "text-green-700 font-semibold" : "text-gray-700 hover:text-green-700"
+            }
           >
             Favorites
-          </Link>
-        </div>
+          </NavLink>
+        </nav>
       </div>
-    </nav>
+    </header>
   );
 }

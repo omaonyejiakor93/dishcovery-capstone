@@ -1,61 +1,52 @@
 // src/pages/Favorites.jsx
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
-export default function Favorites() {
-  const [favorites, setFavorites] = useState([]);
-
-  useEffect(() => {
-    const raw = localStorage.getItem("dishcovery_favorites");
-    if (raw) setFavorites(JSON.parse(raw));
-  }, []);
-
-  function removeFav(id) {
-    const filtered = favorites.filter((f) => f.idMeal !== id);
-    setFavorites(filtered);
-    localStorage.setItem("dishcovery_favorites", JSON.stringify(filtered));
-  }
-
-  if (!favorites || favorites.length === 0) {
-    return (
-      <div className="min-h-screen py-12 px-6">
-        <h1 className="text-2xl font-bold mb-4">Your Favorites</h1>
-        <p className="text-gray-600">No favorites yet. Save recipes to see them here.</p>
-        <Link to="/" className="mt-4 inline-block text-green-600">Back to Home</Link>
-      </div>
-    );
-  }
-
+export default function Favorites({ favorites }) {
   return (
-    <div className="min-h-screen py-12 px-6">
-      <h1 className="text-2xl font-bold mb-6">Your Favorites</h1>
+    <div className="max-w-7xl mx-auto px-6 py-12">
+      <h1 className="text-3xl font-bold mb-8 text-center">My Favorites</h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {favorites.map((r) => (
-          <div key={r.idMeal} className="bg-white rounded-lg shadow overflow-hidden">
-            <img src={r.strMealThumb} alt={r.strMeal} className="w-full h-44 object-cover" />
-            <div className="p-4">
-              <h3 className="font-semibold text-lg">{r.strMeal}</h3>
-              <p className="text-sm text-gray-500 mb-3">{r.strCategory || ""}</p>
-
-              <div className="flex gap-2">
+      {favorites && favorites.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          {favorites.map((recipe) => (
+            <div
+              key={recipe.idMeal}
+              className="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden"
+            >
+              <img
+                src={recipe.strMealThumb}
+                alt={recipe.strMeal}
+                className="w-full h-48 object-cover"
+              />
+              <div className="p-4">
+                <h2 className="text-lg font-semibold mb-2 truncate">
+                  {recipe.strMeal}
+                </h2>
+                <p className="text-sm text-gray-500 mb-3">
+                  {recipe.strArea} • {recipe.strCategory}
+                </p>
                 <Link
-                  to={`/recipe/${r.idMeal}`}
-                  className="flex-1 text-center bg-green-600 text-white py-2 rounded hover:bg-green-700"
+                  to={`/recipe/${recipe.idMeal}`}
+                  className="text-green-600 font-medium hover:underline"
                 >
-                  View
+                  View Recipe →
                 </Link>
-                <button
-                  onClick={() => removeFav(r.idMeal)}
-                  className="px-3 py-2 border rounded text-sm"
-                >
-                  Remove
-                </button>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center text-gray-500">
+          <p className="mb-6">No favorites yet. Save a recipe to see them here!</p>
+          <Link
+            to="/"
+            className="inline-block px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition"
+          >
+            Back to Home
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
