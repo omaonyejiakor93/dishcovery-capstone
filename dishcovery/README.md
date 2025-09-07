@@ -59,7 +59,7 @@ dishcovery/
 🌍 Deployment
 
 You can deploy this app easily on Vercel or Netlify.
-Example: https://dishcovery.vercel.app
+https://dishcovery-capstone.vercel.app/
 
 🙌 Acknowledgments
  • TheMealDB (https://www.themealdb.com/) for providing the free recipe API.
