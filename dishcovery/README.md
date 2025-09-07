@@ -56,7 +56,10 @@ dishcovery/
    cd dishcovery
    3. Open index.html in your browser to get started.
 
-⸻
+🌍 Deployment
+
+You can deploy this app easily on Vercel or Netlify.
+Example: https://dishcovery.vercel.app
 
 🙌 Acknowledgments
  • TheMealDB (https://www.themealdb.com/) for providing the free recipe API.
