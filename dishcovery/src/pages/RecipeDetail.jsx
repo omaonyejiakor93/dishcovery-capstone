@@ -1,4 +1,4 @@
-// src/pages/RecipeDetail.js
+// src/pages/RecipeDetail.jsx
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
@@ -11,8 +11,8 @@ export default function RecipeDetail() {
     async function fetchRecipe() {
       try {
         const res = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
-);
+          `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
+     );
         const data = await res.json();
         if (data.meals) {
           setRecipe(data.meals[0]);
@@ -41,7 +41,6 @@ export default function RecipeDetail() {
       ingredients.push(
   `${recipe[`strIngredient${i}`]} - ${recipe[`strMeasure${i}`]}`
 );
-  
     }
   }
 
@@ -52,6 +51,19 @@ export default function RecipeDetail() {
     const videoId = youtubeUrl.split("v=")[1];
     youtubeEmbed = `https://www.youtube.com/embed/${videoId}`;
   }
+
+  // Add to Favorites
+  const handleAddToFavorites = () => {
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    const exists = favorites.find((fav) => fav.idMeal === recipe.idMeal);
+    if (!exists) {
+      favorites.push(recipe);
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      alert(`${recipe.strMeal} added to favorites!`);
+    } else {
+      alert("This recipe is already in your favorites!");
+    }
+  };
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
@@ -66,8 +78,18 @@ export default function RecipeDetail() {
         className="w-full md:w-2/3 h-64 object-cover rounded mb-6 shadow"
       />
 
+      {/* Add to Favorites Button */}
+      <button
+        onClick={handleAddToFavorites}
+        className="bg-green-600 text-white px-4 py-2 rounded mb-6 hover:bg-green-700"
+      >
+        Add to Favorites
+      </button>
+
       <h2 className="text-xl font-semibold mb-2">Category</h2>
-      <p className="mb-4">{recipe.strCategory} ({recipe.strArea})</p>
+      <p className="mb-4">
+        {recipe.strCategory} ({recipe.strArea})
+      </p>
 
       <h2 className="text-xl font-semibold mb-2">Ingredients</h2>
       <ul className="list-disc list-inside mb-4">
